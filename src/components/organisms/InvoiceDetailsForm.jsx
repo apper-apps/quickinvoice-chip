@@ -53,12 +53,16 @@ const InvoiceDetailsForm = ({ formData, updateField }) => {
             <h3 className="text-lg font-semibold text-gray-900">Invoice Template</h3>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { value: 'professional', name: 'Professional', desc: 'Clean corporate design', color: 'blue' },
               { value: 'modern', name: 'Modern', desc: 'Contemporary styling', color: 'purple' },
               { value: 'creative', name: 'Creative', desc: 'Vibrant and colorful', color: 'pink' },
-              { value: 'minimal', name: 'Minimal', desc: 'Simple and elegant', color: 'gray' }
+              { value: 'minimal', name: 'Minimal', desc: 'Simple and elegant', color: 'gray' },
+              { value: 'corporate', name: 'Corporate', desc: 'Dark sophisticated style', color: 'slate' },
+              { value: 'elegant', name: 'Elegant', desc: 'Refined luxury design', color: 'rose' },
+              { value: 'tech', name: 'Tech', desc: 'Modern technology aesthetic', color: 'cyan' },
+              { value: 'classic', name: 'Classic', desc: 'Traditional timeless look', color: 'amber' }
             ].map((template) => (
               <div
                 key={template.value}
@@ -84,6 +88,11 @@ const InvoiceDetailsForm = ({ formData, updateField }) => {
                   template.color === 'blue' ? 'from-blue-500 to-blue-600' :
                   template.color === 'purple' ? 'from-purple-500 to-purple-600' :
                   template.color === 'pink' ? 'from-pink-500 to-pink-600' :
+                  template.color === 'gray' ? 'from-gray-400 to-gray-500' :
+                  template.color === 'slate' ? 'from-slate-600 to-slate-700' :
+                  template.color === 'rose' ? 'from-rose-500 to-rose-600' :
+                  template.color === 'cyan' ? 'from-cyan-500 to-cyan-600' :
+                  template.color === 'amber' ? 'from-amber-500 to-amber-600' :
                   'from-gray-400 to-gray-500'
                 }`} />
               </div>

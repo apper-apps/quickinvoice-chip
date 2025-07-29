@@ -282,11 +282,46 @@ const getTemplateStyles = (template) => {
         tableHeader: 'bg-gray-50 border-gray-300',
         totalsBg: 'bg-gray-50',
         border: 'border-gray-300'
+      },
+      corporate: {
+        bg: 'bg-gradient-to-br from-slate-900 to-slate-800',
+        accent: 'from-slate-600 to-slate-700',
+        headerBg: 'bg-slate-800/50',
+        titleColor: 'text-slate-100',
+        tableHeader: 'bg-slate-800/30 border-slate-600',
+        totalsBg: 'bg-slate-800/20',
+        border: 'border-slate-600'
+      },
+      elegant: {
+        bg: 'bg-gradient-to-br from-white via-rose-50/20 to-amber-50/20',
+        accent: 'from-rose-600 via-rose-500 to-amber-500',
+        headerBg: 'bg-gradient-to-r from-rose-50/50 to-amber-50/50',
+        titleColor: 'text-rose-900',
+        tableHeader: 'bg-gradient-to-r from-rose-50/30 to-amber-50/30 border-rose-200',
+        totalsBg: 'bg-gradient-to-r from-rose-50/40 to-amber-50/40',
+        border: 'border-rose-200'
+      },
+      tech: {
+        bg: 'bg-gradient-to-br from-slate-50 to-cyan-50',
+        accent: 'from-cyan-600 to-teal-600',
+        headerBg: 'bg-gradient-to-r from-cyan-50 to-teal-50',
+        titleColor: 'text-cyan-900',
+        tableHeader: 'bg-gradient-to-r from-cyan-50 to-teal-50 border-cyan-200',
+        totalsBg: 'bg-gradient-to-r from-cyan-50/50 to-teal-50/50',
+        border: 'border-cyan-200'
+      },
+      classic: {
+        bg: 'bg-gradient-to-br from-white to-amber-50/30',
+        accent: 'from-amber-700 to-amber-800',
+        headerBg: 'bg-amber-50/50',
+        titleColor: 'text-amber-900',
+        tableHeader: 'bg-amber-50/30 border-amber-300',
+        totalsBg: 'bg-amber-50/40',
+        border: 'border-amber-300'
       }
     };
     return styles[template] || styles.professional;
   };
-
   const InvoicePreview = () => {
     const styles = getTemplateStyles(formData.template);
     
