@@ -21,6 +21,7 @@ const [formData, setFormData] = useState({
     clientName: "",
     clientAddress: "",
     currency: "USD",
+    template: "professional",
     logo: null,
     logoUrl: "",
     taxRate: 0,
@@ -244,144 +245,226 @@ const handleGeneratePDF = async () => {
     }
   };
 
-const InvoicePreview = () => (
-    <div className="bg-white border border-gray-200 rounded-xl p-6 sm:p-8 shadow-lg">
-      {/* Header Section */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-8 space-y-6 sm:space-y-0">
-        <div className="flex-1">
-          {formData.logoUrl && (
-            <img 
-              src={formData.logoUrl} 
-              alt="Company Logo" 
-              className="h-12 sm:h-16 w-auto mb-4 object-contain"
-            />
-          )}
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
-            {formData.businessName || "Your Business Name"}
-          </h1>
-          <p className="text-gray-600 text-sm sm:text-base whitespace-pre-line leading-relaxed">
-            {formData.businessAddress || "Business Address"}
-          </p>
-          <p className="text-gray-600 text-sm sm:text-base mt-1">
-            {formData.businessEmail || "business@email.com"}
-          </p>
+const getTemplateStyles = (template) => {
+    const styles = {
+      professional: {
+        bg: 'bg-white',
+        accent: 'from-blue-600 to-blue-700',
+        headerBg: 'bg-blue-50',
+        titleColor: 'text-blue-900',
+        tableHeader: 'bg-blue-50 border-blue-200',
+        totalsBg: 'bg-blue-50/50',
+        border: 'border-blue-200'
+      },
+      modern: {
+        bg: 'bg-gradient-to-br from-white to-purple-50',
+        accent: 'from-purple-600 to-purple-700',
+        headerBg: 'bg-purple-50',
+        titleColor: 'text-purple-900',
+        tableHeader: 'bg-purple-50 border-purple-200',
+        totalsBg: 'bg-purple-50/50',
+        border: 'border-purple-200'
+      },
+      creative: {
+        bg: 'bg-gradient-to-br from-white via-pink-50/30 to-orange-50/30',
+        accent: 'from-pink-600 via-pink-500 to-orange-500',
+        headerBg: 'bg-gradient-to-r from-pink-50 to-orange-50',
+        titleColor: 'text-pink-900',
+        tableHeader: 'bg-gradient-to-r from-pink-50 to-orange-50 border-pink-200',
+        totalsBg: 'bg-gradient-to-r from-pink-50/50 to-orange-50/50',
+        border: 'border-pink-200'
+      },
+      minimal: {
+        bg: 'bg-white',
+        accent: 'from-gray-700 to-gray-800',
+        headerBg: 'bg-gray-50',
+        titleColor: 'text-gray-900',
+        tableHeader: 'bg-gray-50 border-gray-300',
+        totalsBg: 'bg-gray-50',
+        border: 'border-gray-300'
+      }
+    };
+    return styles[template] || styles.professional;
+  };
+
+  const InvoicePreview = () => {
+    const styles = getTemplateStyles(formData.template);
+    
+    return (
+      <div className={`${styles.bg} border-2 ${styles.border} rounded-xl p-6 sm:p-8 shadow-xl relative overflow-hidden`}>
+        {/* Template decorative elements */}
+        {formData.template === 'creative' && (
+          <>
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-pink-100 to-transparent rounded-full -translate-y-16 translate-x-16 opacity-50" />
+            <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-orange-100 to-transparent rounded-full translate-y-12 -translate-x-12 opacity-50" />
+          </>
+        )}
+        
+        {formData.template === 'modern' && (
+          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-purple-500/5 to-purple-500/10 pointer-events-none" />
+        )}
+
+        {/* Header Section */}
+        <div className="relative">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-8 space-y-6 sm:space-y-0">
+            <div className="flex-1">
+              {formData.logoUrl && (
+                <div className="mb-6">
+                  <img 
+                    src={formData.logoUrl} 
+                    alt="Company Logo" 
+                    className="h-12 sm:h-16 w-auto object-contain filter drop-shadow-sm"
+                  />
+                </div>
+              )}
+              <h1 className={`text-2xl sm:text-3xl font-bold ${styles.titleColor} mb-3 tracking-tight`}>
+                {formData.businessName || "Your Business Name"}
+              </h1>
+              <div className="space-y-2">
+                <p className="text-gray-600 text-sm sm:text-base whitespace-pre-line leading-relaxed">
+                  {formData.businessAddress || "Business Address"}
+                </p>
+                <p className="text-gray-600 text-sm sm:text-base font-medium">
+                  {formData.businessEmail || "business@email.com"}
+                </p>
+              </div>
+            </div>
+            
+            <div className={`text-left sm:text-right ${styles.headerBg} p-6 rounded-xl sm:min-w-[200px] shadow-sm`}>
+              <h2 className={`text-2xl sm:text-3xl font-bold ${styles.titleColor} mb-4 tracking-wide`}>
+                INVOICE
+              </h2>
+              <div className="space-y-2 text-sm sm:text-base">
+                <p className="text-gray-700 font-bold text-lg">
+                  #{formData.invoiceNumber || "000001"}
+                </p>
+                <p className="text-gray-600">
+                  <span className="font-semibold">Date:</span> {formData.date || "Select Date"}
+                </p>
+                <p className="text-gray-600">
+                  <span className="font-semibold">Due:</span> {formData.dueDate || "Select Due Date"}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Decorative line */}
+          <div className={`h-1 bg-gradient-to-r ${styles.accent} rounded-full mb-8 shadow-sm`} />
         </div>
-        <div className="text-left sm:text-right bg-gray-50 p-4 rounded-lg sm:bg-transparent sm:p-0">
-          <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">INVOICE</h2>
-          <div className="space-y-1 text-sm sm:text-base">
-            <p className="text-gray-700 font-medium">
-              #{formData.invoiceNumber || "000001"}
+
+        {/* Bill To Section */}
+        <div className={`mb-8 p-6 ${styles.headerBg} rounded-xl shadow-sm`}>
+          <h3 className={`font-bold ${styles.titleColor} mb-4 text-lg flex items-center`}>
+            <ApperIcon name="User" className="w-5 h-5 mr-2" />
+            Bill To
+          </h3>
+          <div className="space-y-2">
+            <p className="font-bold text-gray-900 text-lg">
+              {formData.clientName || "Client Name"}
             </p>
-            <p className="text-gray-600">
-              <span className="font-medium">Date:</span> {formData.date || "Select Date"}
-            </p>
-            <p className="text-gray-600">
-              <span className="font-medium">Due:</span> {formData.dueDate || "Select Due Date"}
+            <p className="text-gray-600 text-sm sm:text-base whitespace-pre-line leading-relaxed">
+              {formData.clientAddress || "Client Address"}
             </p>
           </div>
         </div>
-      </div>
 
-      {/* Bill To Section */}
-      <div className="mb-8 p-4 bg-blue-50/50 rounded-lg">
-        <h3 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">Bill To:</h3>
-        <p className="font-semibold text-gray-900 text-sm sm:text-base">
-          {formData.clientName || "Client Name"}
-        </p>
-        <p className="text-gray-600 text-sm sm:text-base whitespace-pre-line leading-relaxed mt-1">
-          {formData.clientAddress || "Client Address"}
-        </p>
-      </div>
+        {/* Line Items Table */}
+        <div className="mb-8 overflow-x-auto -mx-2 sm:mx-0 rounded-xl shadow-sm">
+          <table className="w-full min-w-[500px] sm:min-w-0 bg-white rounded-xl overflow-hidden">
+            <thead>
+              <tr className={`${styles.tableHeader} border-b-2`}>
+                <th className="text-left py-4 px-4 sm:px-6 text-sm font-bold text-gray-900 tracking-wide">DESCRIPTION</th>
+                <th className="text-right py-4 px-3 text-sm font-bold text-gray-900 w-20 tracking-wide">QTY</th>
+                <th className="text-right py-4 px-3 text-sm font-bold text-gray-900 w-24 tracking-wide">RATE</th>
+                <th className="text-right py-4 px-4 sm:px-6 text-sm font-bold text-gray-900 w-28 tracking-wide">AMOUNT</th>
+              </tr>
+            </thead>
+            <tbody>
+              {lineItems.length > 0 ? lineItems.map((item, index) => (
+                <tr key={index} className="border-b border-gray-100 hover:bg-gray-50/50 transition-colors">
+                  <td className="py-4 px-4 sm:px-6 text-sm sm:text-base text-gray-900 font-medium">
+                    {item.description || "Item description"}
+                  </td>
+                  <td className="text-right py-4 px-3 text-sm sm:text-base text-gray-700 font-medium">
+                    {item.quantity || 0}
+                  </td>
+                  <td className="text-right py-4 px-3 text-sm sm:text-base text-gray-700 font-medium">
+                    {formatCurrency(item.rate || 0)}
+                  </td>
+                  <td className="text-right py-4 px-4 sm:px-6 text-sm sm:text-base font-bold text-gray-900">
+                    {formatCurrency(item.amount || 0)}
+                  </td>
+                </tr>
+              )) : (
+                <tr>
+                  <td colSpan="4" className="py-12 text-center text-gray-500 text-base font-medium">
+                    <ApperIcon name="FileText" className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                    No line items added yet
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
 
-      {/* Line Items Table */}
-      <div className="mb-8 overflow-x-auto -mx-2 sm:mx-0">
-        <table className="w-full min-w-[500px] sm:min-w-0">
-          <thead>
-            <tr className="border-b-2 border-gray-200 bg-gray-50">
-              <th className="text-left py-3 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-gray-900">Description</th>
-              <th className="text-right py-3 px-2 text-xs sm:text-sm font-semibold text-gray-900 w-16 sm:w-20">Qty</th>
-              <th className="text-right py-3 px-2 text-xs sm:text-sm font-semibold text-gray-900 w-20 sm:w-24">Rate</th>
-              <th className="text-right py-3 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-gray-900 w-20 sm:w-24">Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {lineItems.length > 0 ? lineItems.map((item, index) => (
-              <tr key={index} className="border-b border-gray-100 hover:bg-gray-50/50">
-                <td className="py-3 px-2 sm:px-4 text-sm sm:text-base text-gray-900">
-                  {item.description || "Item description"}
-                </td>
-                <td className="text-right py-3 px-2 text-sm sm:text-base text-gray-700">
-                  {item.quantity || 0}
-                </td>
-                <td className="text-right py-3 px-2 text-sm sm:text-base text-gray-700">
-                  {formatCurrency(item.rate || 0)}
-                </td>
-                <td className="text-right py-3 px-2 sm:px-4 text-sm sm:text-base font-semibold text-gray-900">
-                  {formatCurrency(item.amount || 0)}
-                </td>
-              </tr>
-            )) : (
-              <tr>
-                <td colSpan="4" className="py-8 text-center text-gray-500 text-sm sm:text-base">
-                  No line items added yet
-                </td>
-              </tr>
+        {/* Totals Section */}
+        <div className="flex justify-end mb-8">
+          <div className={`w-full sm:w-96 space-y-4 ${styles.totalsBg} p-6 rounded-xl shadow-sm border ${styles.border}`}>
+            <div className="flex justify-between items-center text-base">
+              <span className="text-gray-700 font-semibold">Subtotal:</span>
+              <span className="font-bold text-gray-900 text-lg">{formatCurrency(formData.subtotal)}</span>
+            </div>
+            {formData.discountAmount > 0 && (
+              <div className="flex justify-between items-center text-green-600 text-base">
+                <span className="font-semibold">
+                  Discount ({formData.discountType === 'percentage' 
+                    ? `${formData.discountValue}%` 
+                    : formatCurrency(formData.discountValue)}):
+                </span>
+                <span className="font-bold text-lg">-{formatCurrency(formData.discountAmount)}</span>
+              </div>
             )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Totals Section */}
-      <div className="flex justify-end mb-8">
-        <div className="w-full sm:w-80 space-y-3 bg-gray-50 p-4 sm:p-6 rounded-lg">
-          <div className="flex justify-between items-center text-sm sm:text-base">
-            <span className="text-gray-700 font-medium">Subtotal:</span>
-            <span className="font-semibold text-gray-900">{formatCurrency(formData.subtotal)}</span>
-          </div>
-          {formData.discountAmount > 0 && (
-            <div className="flex justify-between items-center text-green-600 text-sm sm:text-base">
-              <span className="font-medium">
-                Discount ({formData.discountType === 'percentage' 
-                  ? `${formData.discountValue}%` 
-                  : formatCurrency(formData.discountValue)}):
+            {formData.taxAmount > 0 && (
+              <div className="flex justify-between items-center text-base">
+                <span className="text-gray-700 font-semibold">Tax ({formData.taxRate}%):</span>
+                <span className="font-bold text-gray-900 text-lg">{formatCurrency(formData.taxAmount)}</span>
+              </div>
+            )}
+            <div className={`flex justify-between items-center font-bold text-xl border-t-2 ${styles.border} pt-4 mt-4`}>
+              <span className="text-gray-900 tracking-wide">TOTAL:</span>
+              <span className={`bg-gradient-to-r ${styles.accent} bg-clip-text text-transparent text-2xl`}>
+                {formatCurrency(formData.total)}
               </span>
-              <span className="font-semibold">-{formatCurrency(formData.discountAmount)}</span>
             </div>
-          )}
-          {formData.taxAmount > 0 && (
-            <div className="flex justify-between items-center text-sm sm:text-base">
-              <span className="text-gray-700 font-medium">Tax ({formData.taxRate}%):</span>
-              <span className="font-semibold text-gray-900">{formatCurrency(formData.taxAmount)}</span>
-            </div>
-          )}
-          <div className="flex justify-between items-center font-bold text-lg sm:text-xl border-t-2 border-gray-300 pt-3 mt-3">
-            <span className="text-gray-900">Total:</span>
-            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              {formatCurrency(formData.total)}
-            </span>
           </div>
         </div>
-      </div>
 
-      {/* Terms and Notes */}
-      {(formData.paymentTerms || formData.notes) && (
-        <div className="space-y-6 border-t border-gray-200 pt-6">
-          {formData.paymentTerms && (
-            <div className="bg-blue-50/30 p-4 rounded-lg">
-              <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Payment Terms:</h4>
-              <p className="text-gray-700 text-sm sm:text-base leading-relaxed">{formData.paymentTerms}</p>
-            </div>
-          )}
-          {formData.notes && (
-            <div className="bg-yellow-50/30 p-4 rounded-lg">
-              <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Notes:</h4>
-              <p className="text-gray-700 text-sm sm:text-base whitespace-pre-line leading-relaxed">{formData.notes}</p>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
-  );
+        {/* Terms and Notes */}
+        {(formData.paymentTerms || formData.notes) && (
+          <div className="space-y-6 border-t-2 border-gray-200 pt-8">
+            {formData.paymentTerms && (
+              <div className={`${styles.headerBg} p-6 rounded-xl shadow-sm`}>
+                <h4 className={`font-bold ${styles.titleColor} mb-3 text-lg flex items-center`}>
+                  <ApperIcon name="CreditCard" className="w-5 h-5 mr-2" />
+                  Payment Terms
+                </h4>
+                <p className="text-gray-700 text-sm sm:text-base leading-relaxed">{formData.paymentTerms}</p>
+              </div>
+            )}
+            {formData.notes && (
+              <div className="bg-yellow-50 border border-yellow-200 p-6 rounded-xl shadow-sm">
+                <h4 className="font-bold text-yellow-900 mb-3 text-lg flex items-center">
+                  <ApperIcon name="MessageSquare" className="w-5 h-5 mr-2" />
+                  Notes
+                </h4>
+                <p className="text-gray-700 text-sm sm:text-base whitespace-pre-line leading-relaxed">{formData.notes}</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   // Initialize with sample data for demo
   useEffect(() => {
