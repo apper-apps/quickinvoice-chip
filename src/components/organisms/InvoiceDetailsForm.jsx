@@ -55,14 +55,62 @@ const InvoiceDetailsForm = ({ formData, updateField }) => {
           
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
-              { value: 'professional', name: 'Professional', desc: 'Clean corporate design', color: 'blue' },
-              { value: 'modern', name: 'Modern', desc: 'Contemporary styling', color: 'purple' },
-              { value: 'creative', name: 'Creative', desc: 'Vibrant and colorful', color: 'pink' },
-              { value: 'minimal', name: 'Minimal', desc: 'Simple and elegant', color: 'gray' },
-              { value: 'corporate', name: 'Corporate', desc: 'Dark sophisticated style', color: 'slate' },
-              { value: 'elegant', name: 'Elegant', desc: 'Refined luxury design', color: 'rose' },
-              { value: 'tech', name: 'Tech', desc: 'Modern technology aesthetic', color: 'cyan' },
-              { value: 'classic', name: 'Classic', desc: 'Traditional timeless look', color: 'amber' }
+              { 
+                value: 'professional', 
+                name: 'Professional', 
+                desc: 'Clean lines with structured layout', 
+                color: 'blue',
+                preview: 'border-structured'
+              },
+              { 
+                value: 'modern', 
+                name: 'Modern', 
+                desc: 'Bold typography with geometric elements', 
+                color: 'purple',
+                preview: 'geometric-bold'
+              },
+              { 
+                value: 'creative', 
+                name: 'Creative', 
+                desc: 'Rounded corners with vibrant gradients', 
+                color: 'pink',
+                preview: 'rounded-gradient'
+              },
+              { 
+                value: 'minimal', 
+                name: 'Minimal', 
+                desc: 'Maximum whitespace with thin lines', 
+                color: 'gray',
+                preview: 'minimal-lines'
+              },
+              { 
+                value: 'corporate', 
+                name: 'Corporate', 
+                desc: 'Strong borders with dark accents', 
+                color: 'slate',
+                preview: 'strong-borders'
+              },
+              { 
+                value: 'elegant', 
+                name: 'Elegant', 
+                desc: 'Refined spacing with decorative touches', 
+                color: 'rose',
+                preview: 'decorative-refined'
+              },
+              { 
+                value: 'tech', 
+                name: 'Tech', 
+                desc: 'Sharp angles with modern glow effects', 
+                color: 'cyan',
+                preview: 'angular-glow'
+              },
+              { 
+                value: 'classic', 
+                name: 'Classic', 
+                desc: 'Traditional layout with serif elements', 
+                color: 'amber',
+                preview: 'traditional-serif'
+              }
             ].map((template) => (
               <div
                 key={template.value}
@@ -73,10 +121,10 @@ const InvoiceDetailsForm = ({ formData, updateField }) => {
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
                     <h4 className="font-semibold text-gray-900">{template.name}</h4>
-                    <p className="text-sm text-gray-600 mt-1">{template.desc}</p>
+                    <p className="text-xs text-gray-600 mt-1">{template.desc}</p>
                   </div>
                   {formData.template === template.value && (
                     <div className={`w-5 h-5 bg-${template.color}-500 rounded-full flex items-center justify-center`}>
@@ -84,17 +132,94 @@ const InvoiceDetailsForm = ({ formData, updateField }) => {
                     </div>
                   )}
                 </div>
-                <div className={`mt-3 h-8 rounded bg-gradient-to-r ${
-                  template.color === 'blue' ? 'from-blue-500 to-blue-600' :
-                  template.color === 'purple' ? 'from-purple-500 to-purple-600' :
-                  template.color === 'pink' ? 'from-pink-500 to-pink-600' :
-                  template.color === 'gray' ? 'from-gray-400 to-gray-500' :
-                  template.color === 'slate' ? 'from-slate-600 to-slate-700' :
-                  template.color === 'rose' ? 'from-rose-500 to-rose-600' :
-                  template.color === 'cyan' ? 'from-cyan-500 to-cyan-600' :
-                  template.color === 'amber' ? 'from-amber-500 to-amber-600' :
-                  'from-gray-400 to-gray-500'
-                }`} />
+                
+                {/* Design Preview based on template style */}
+                <div className="space-y-2">
+                  {template.preview === 'border-structured' && (
+                    <div className="space-y-1">
+                      <div className={`h-2 bg-${template.color}-500 rounded-sm`} />
+                      <div className="flex space-x-1">
+                        <div className={`h-1 w-8 bg-${template.color}-300 rounded-sm`} />
+                        <div className={`h-1 w-6 bg-${template.color}-300 rounded-sm`} />
+                      </div>
+                      <div className={`h-1 w-full bg-gray-200 border border-${template.color}-200 rounded-sm`} />
+                    </div>
+                  )}
+                  
+                  {template.preview === 'geometric-bold' && (
+                    <div className="space-y-1">
+                      <div className={`h-3 bg-gradient-to-r from-${template.color}-500 to-${template.color}-600 transform skew-x-12`} />
+                      <div className="flex space-x-1">
+                        <div className={`h-1 w-4 bg-${template.color}-400 transform skew-x-6`} />
+                        <div className={`h-1 w-8 bg-${template.color}-300`} />
+                      </div>
+                    </div>
+                  )}
+                  
+                  {template.preview === 'rounded-gradient' && (
+                    <div className="space-y-2">
+                      <div className={`h-2 bg-gradient-to-r from-${template.color}-400 via-${template.color}-500 to-${template.color}-600 rounded-full`} />
+                      <div className="flex space-x-1">
+                        <div className={`h-1 w-6 bg-${template.color}-300 rounded-full`} />
+                        <div className={`h-1 w-4 bg-${template.color}-200 rounded-full`} />
+                      </div>
+                    </div>
+                  )}
+                  
+                  {template.preview === 'minimal-lines' && (
+                    <div className="space-y-3">
+                      <div className={`h-px bg-${template.color}-300`} />
+                      <div className="flex justify-between">
+                        <div className={`h-px w-6 bg-${template.color}-200`} />
+                        <div className={`h-px w-4 bg-${template.color}-200`} />
+                      </div>
+                      <div className={`h-px bg-gray-200`} />
+                    </div>
+                  )}
+                  
+                  {template.preview === 'strong-borders' && (
+                    <div className={`border-2 border-${template.color}-600 p-1 bg-${template.color}-50`}>
+                      <div className={`h-1 bg-${template.color}-700 mb-1`} />
+                      <div className="flex space-x-1">
+                        <div className={`h-1 w-4 bg-${template.color}-500`} />
+                        <div className={`h-1 w-6 bg-${template.color}-400`} />
+                      </div>
+                    </div>
+                  )}
+                  
+                  {template.preview === 'decorative-refined' && (
+                    <div className="space-y-1">
+                      <div className={`h-2 bg-gradient-to-r from-transparent via-${template.color}-400 to-transparent rounded-full`} />
+                      <div className="flex justify-center space-x-2">
+                        <div className={`h-1 w-1 bg-${template.color}-500 rounded-full`} />
+                        <div className={`h-1 w-8 bg-${template.color}-300 rounded-sm`} />
+                        <div className={`h-1 w-1 bg-${template.color}-500 rounded-full`} />
+                      </div>
+                    </div>
+                  )}
+                  
+                  {template.preview === 'angular-glow' && (
+                    <div className="space-y-1">
+                      <div className={`h-2 bg-${template.color}-500 clip-path-polygon shadow-lg shadow-${template.color}-300/50`} style={{clipPath: 'polygon(0 0, 90% 0, 100% 100%, 10% 100%)'}} />
+                      <div className="flex space-x-1">
+                        <div className={`h-1 w-6 bg-${template.color}-400 shadow-sm shadow-${template.color}-200`} />
+                        <div className={`h-1 w-4 bg-${template.color}-300`} />
+                      </div>
+                    </div>
+                  )}
+                  
+                  {template.preview === 'traditional-serif' && (
+                    <div className="space-y-1">
+                      <div className={`h-2 bg-${template.color}-600 relative`}>
+                        <div className={`absolute top-0 left-0 w-2 h-2 bg-${template.color}-700 transform rotate-45 -translate-x-1 -translate-y-1`} />
+                      </div>
+                      <div className="flex space-x-1">
+                        <div className={`h-1 w-8 bg-${template.color}-400 border-b border-${template.color}-600`} />
+                        <div className={`h-1 w-4 bg-${template.color}-300`} />
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>
