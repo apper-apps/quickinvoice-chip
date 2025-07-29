@@ -13,8 +13,8 @@ const currencies = [
 
   return (
     <div className="flex justify-end mb-6">
-    <Card
-        className="w-full md:w-80 bg-gradient-to-br from-gray-50 to-white border-gray-200">
+<Card
+        className="w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl xl:max-w-4xl bg-gradient-to-br from-gray-50 to-white border-gray-200">
         <div className="flex items-center mb-4">
             <ApperIcon name="Calculator" className="w-5 h-5 text-primary mr-2" />
             <h2 className="text-lg font-semibold text-gray-900">Invoice Total</h2>
