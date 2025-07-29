@@ -1,16 +1,11 @@
 import React from "react";
-import Card from "@/components/atoms/Card";
-import Button from "@/components/atoms/Button";
-import Input from "@/components/atoms/Input";
 import ApperIcon from "@/components/ApperIcon";
+import Input from "@/components/atoms/Input";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
 
-const LineItemsTable = ({ lineItems, updateLineItem, addLineItem, removeLineItem }) => {
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount || 0);
-  };
+const LineItemsTable = ({ lineItems, updateLineItem, addLineItem, removeLineItem, formatCurrency }) => {
+  // formatCurrency now passed as prop for dynamic currency support
 
   return (
     <Card className="mb-6">

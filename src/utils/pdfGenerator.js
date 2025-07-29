@@ -2,9 +2,35 @@ import jsPDF from "jspdf";
 
 export const generateInvoicePDF = (invoiceData, lineItems) => {
   const doc = new jsPDF();
-  
+const formatCurrency = (amount) => {
+    const currencyMap = {
+      USD: { symbol: '$', locale: 'en-US' },
+      EUR: { symbol: '€', locale: 'de-DE' },
+      GBP: { symbol: '£', locale: 'en-GB' },
+      CAD: { symbol: 'C$', locale: 'en-CA' },
+      AUD: { symbol: 'A$', locale: 'en-AU' }
+    };
+    
+    const currency = currencyMap[invoiceData.currency] || currencyMap.USD;
+    return new Intl.NumberFormat(currency.locale, {
+      style: "currency",
+      currency: invoiceData.currency || 'USD',
+    }).format(amount || 0);
+  };
   // Set font
   doc.setFont("helvetica");
+  
+let yPos = 20;
+  
+  // Add logo if available
+  if (invoiceData.logoUrl) {
+    try {
+      doc.addImage(invoiceData.logoUrl, 'JPEG', 20, yPos, 40, 20);
+      yPos += 25;
+    } catch (error) {
+      console.warn('Could not add logo to PDF:', error);
+    }
+  }
   
   // Header - Business Name
   doc.setFontSize(24);
@@ -97,25 +123,68 @@ export const generateInvoicePDF = (invoiceData, lineItems) => {
   });
   
   // Totals section
-  yPos += 10;
-  const subtotal = invoiceData.subtotal || 0;
-  const total = invoiceData.total || 0;
+yPos += 10;
+  
+  // Totals section
+  doc.setFontSize(10);
+  doc.setTextColor(0, 0, 0);
   
   // Subtotal
-  doc.setFontSize(10);
   doc.text("Subtotal:", 140, yPos);
-  doc.text(`$${subtotal.toFixed(2)}`, 170, yPos);
-  
+  doc.text(formatCurrency(invoiceData.subtotal), 170, yPos);
   yPos += 8;
+  
+  // Discount
+  if (invoiceData.discountAmount > 0) {
+    doc.setTextColor(34, 197, 94); // Green color
+    const discountLabel = invoiceData.discountType === 'percentage' 
+      ? `Discount (${invoiceData.discountValue}%):`
+      : `Discount (${formatCurrency(invoiceData.discountValue)}):`;
+    doc.text(discountLabel, 140, yPos);
+    doc.text(`-${formatCurrency(invoiceData.discountAmount)}`, 170, yPos);
+    yPos += 8;
+    doc.setTextColor(0, 0, 0);
+  }
+  
+  // Tax
+  if (invoiceData.taxAmount > 0) {
+    doc.text(`Tax (${invoiceData.taxRate}%):`, 140, yPos);
+    doc.text(formatCurrency(invoiceData.taxAmount), 170, yPos);
+    yPos += 8;
+  }
   
   // Total
   doc.setFontSize(12);
   doc.setTextColor(37, 99, 235);
   doc.text("TOTAL:", 140, yPos);
-  doc.text(`$${total.toFixed(2)}`, 170, yPos);
+  doc.text(formatCurrency(invoiceData.total), 170, yPos);
   
   // Footer
-  yPos += 20;
+yPos += 20;
+  
+  // Payment Terms and Notes
+  doc.setFontSize(9);
+  doc.setTextColor(0, 0, 0);
+  
+  if (invoiceData.paymentTerms) {
+    doc.setFontSize(10);
+    doc.text("Payment Terms:", 20, yPos);
+    yPos += 6;
+    doc.setFontSize(9);
+    doc.text(invoiceData.paymentTerms, 20, yPos);
+    yPos += 10;
+  }
+  
+  if (invoiceData.notes) {
+    doc.setFontSize(10);
+    doc.text("Notes:", 20, yPos);
+    yPos += 6;
+    doc.setFontSize(9);
+    const noteLines = doc.splitTextToSize(invoiceData.notes, 170);
+    doc.text(noteLines, 20, yPos);
+    yPos += noteLines.length * 4;
+  }
+  
   doc.setFontSize(9);
   doc.setTextColor(156, 163, 175);
   doc.text("Thank you for your business!", 20, yPos);
@@ -123,7 +192,6 @@ export const generateInvoicePDF = (invoiceData, lineItems) => {
   // Generate filename
   const invoiceNumber = invoiceData.invoiceNumber || "invoice";
   const filename = `${invoiceNumber.replace(/[^a-z0-9]/gi, "_").toLowerCase()}.pdf`;
-  
-  // Save the PDF
+// Save the PDF
   doc.save(filename);
 };
