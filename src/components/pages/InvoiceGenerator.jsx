@@ -244,70 +244,85 @@ const handleGeneratePDF = async () => {
     }
   };
 
-  const InvoicePreview = () => (
-    <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-sm">
-      <div className="flex justify-between items-start mb-8">
-        <div>
+const InvoicePreview = () => (
+    <div className="bg-white border border-gray-200 rounded-xl p-6 sm:p-8 shadow-lg">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-8 space-y-6 sm:space-y-0">
+        <div className="flex-1">
           {formData.logoUrl && (
             <img 
               src={formData.logoUrl} 
               alt="Company Logo" 
-              className="h-16 w-auto mb-4 object-contain"
+              className="h-12 sm:h-16 w-auto mb-4 object-contain"
             />
           )}
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">
             {formData.businessName || "Your Business Name"}
           </h1>
-          <p className="text-gray-600 mt-1 whitespace-pre-line">
+          <p className="text-gray-600 text-sm sm:text-base whitespace-pre-line leading-relaxed">
             {formData.businessAddress || "Business Address"}
           </p>
-          <p className="text-gray-600">
+          <p className="text-gray-600 text-sm sm:text-base mt-1">
             {formData.businessEmail || "business@email.com"}
           </p>
         </div>
-        <div className="text-right">
-          <h2 className="text-xl font-semibold text-gray-900">INVOICE</h2>
-          <p className="text-gray-600 mt-1">
-            #{formData.invoiceNumber || "000001"}
-          </p>
-          <p className="text-gray-600">
-            Date: {formData.date || "Select Date"}
-          </p>
-          <p className="text-gray-600">
-            Due: {formData.dueDate || "Select Due Date"}
-          </p>
+        <div className="text-left sm:text-right bg-gray-50 p-4 rounded-lg sm:bg-transparent sm:p-0">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">INVOICE</h2>
+          <div className="space-y-1 text-sm sm:text-base">
+            <p className="text-gray-700 font-medium">
+              #{formData.invoiceNumber || "000001"}
+            </p>
+            <p className="text-gray-600">
+              <span className="font-medium">Date:</span> {formData.date || "Select Date"}
+            </p>
+            <p className="text-gray-600">
+              <span className="font-medium">Due:</span> {formData.dueDate || "Select Due Date"}
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="mb-8">
-        <h3 className="font-semibold text-gray-900 mb-2">Bill To:</h3>
-        <p className="font-medium">{formData.clientName || "Client Name"}</p>
-        <p className="text-gray-600 whitespace-pre-line">
+      {/* Bill To Section */}
+      <div className="mb-8 p-4 bg-blue-50/50 rounded-lg">
+        <h3 className="font-semibold text-gray-900 mb-3 text-sm sm:text-base">Bill To:</h3>
+        <p className="font-semibold text-gray-900 text-sm sm:text-base">
+          {formData.clientName || "Client Name"}
+        </p>
+        <p className="text-gray-600 text-sm sm:text-base whitespace-pre-line leading-relaxed mt-1">
           {formData.clientAddress || "Client Address"}
         </p>
       </div>
 
-      <div className="mb-8">
-        <table className="w-full">
+      {/* Line Items Table */}
+      <div className="mb-8 overflow-x-auto -mx-2 sm:mx-0">
+        <table className="w-full min-w-[500px] sm:min-w-0">
           <thead>
-            <tr className="border-b border-gray-200">
-              <th className="text-left py-2 text-gray-900">Description</th>
-              <th className="text-right py-2 text-gray-900">Qty</th>
-              <th className="text-right py-2 text-gray-900">Rate</th>
-              <th className="text-right py-2 text-gray-900">Amount</th>
+            <tr className="border-b-2 border-gray-200 bg-gray-50">
+              <th className="text-left py-3 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-gray-900">Description</th>
+              <th className="text-right py-3 px-2 text-xs sm:text-sm font-semibold text-gray-900 w-16 sm:w-20">Qty</th>
+              <th className="text-right py-3 px-2 text-xs sm:text-sm font-semibold text-gray-900 w-20 sm:w-24">Rate</th>
+              <th className="text-right py-3 px-2 sm:px-4 text-xs sm:text-sm font-semibold text-gray-900 w-20 sm:w-24">Amount</th>
             </tr>
           </thead>
           <tbody>
             {lineItems.length > 0 ? lineItems.map((item, index) => (
-              <tr key={index} className="border-b border-gray-100">
-                <td className="py-2">{item.description || "Item description"}</td>
-                <td className="text-right py-2">{item.quantity || 0}</td>
-                <td className="text-right py-2">{formatCurrency(item.rate || 0)}</td>
-                <td className="text-right py-2">{formatCurrency(item.amount || 0)}</td>
+              <tr key={index} className="border-b border-gray-100 hover:bg-gray-50/50">
+                <td className="py-3 px-2 sm:px-4 text-sm sm:text-base text-gray-900">
+                  {item.description || "Item description"}
+                </td>
+                <td className="text-right py-3 px-2 text-sm sm:text-base text-gray-700">
+                  {item.quantity || 0}
+                </td>
+                <td className="text-right py-3 px-2 text-sm sm:text-base text-gray-700">
+                  {formatCurrency(item.rate || 0)}
+                </td>
+                <td className="text-right py-3 px-2 sm:px-4 text-sm sm:text-base font-semibold text-gray-900">
+                  {formatCurrency(item.amount || 0)}
+                </td>
               </tr>
             )) : (
               <tr>
-                <td colSpan="4" className="py-4 text-center text-gray-500">
+                <td colSpan="4" className="py-8 text-center text-gray-500 text-sm sm:text-base">
                   No line items added yet
                 </td>
               </tr>
@@ -316,47 +331,51 @@ const handleGeneratePDF = async () => {
         </table>
       </div>
 
+      {/* Totals Section */}
       <div className="flex justify-end mb-8">
-        <div className="w-64 space-y-2">
-          <div className="flex justify-between">
-            <span>Subtotal:</span>
-            <span>{formatCurrency(formData.subtotal)}</span>
+        <div className="w-full sm:w-80 space-y-3 bg-gray-50 p-4 sm:p-6 rounded-lg">
+          <div className="flex justify-between items-center text-sm sm:text-base">
+            <span className="text-gray-700 font-medium">Subtotal:</span>
+            <span className="font-semibold text-gray-900">{formatCurrency(formData.subtotal)}</span>
           </div>
           {formData.discountAmount > 0 && (
-            <div className="flex justify-between text-green-600">
-              <span>
+            <div className="flex justify-between items-center text-green-600 text-sm sm:text-base">
+              <span className="font-medium">
                 Discount ({formData.discountType === 'percentage' 
                   ? `${formData.discountValue}%` 
                   : formatCurrency(formData.discountValue)}):
               </span>
-              <span>-{formatCurrency(formData.discountAmount)}</span>
+              <span className="font-semibold">-{formatCurrency(formData.discountAmount)}</span>
             </div>
           )}
           {formData.taxAmount > 0 && (
-            <div className="flex justify-between">
-              <span>Tax ({formData.taxRate}%):</span>
-              <span>{formatCurrency(formData.taxAmount)}</span>
+            <div className="flex justify-between items-center text-sm sm:text-base">
+              <span className="text-gray-700 font-medium">Tax ({formData.taxRate}%):</span>
+              <span className="font-semibold text-gray-900">{formatCurrency(formData.taxAmount)}</span>
             </div>
           )}
-          <div className="flex justify-between font-bold text-lg border-t pt-2">
-            <span>Total:</span>
-            <span>{formatCurrency(formData.total)}</span>
+          <div className="flex justify-between items-center font-bold text-lg sm:text-xl border-t-2 border-gray-300 pt-3 mt-3">
+            <span className="text-gray-900">Total:</span>
+            <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              {formatCurrency(formData.total)}
+            </span>
           </div>
         </div>
       </div>
 
+      {/* Terms and Notes */}
       {(formData.paymentTerms || formData.notes) && (
-        <div className="space-y-4">
+        <div className="space-y-6 border-t border-gray-200 pt-6">
           {formData.paymentTerms && (
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-1">Payment Terms:</h4>
-              <p className="text-gray-600">{formData.paymentTerms}</p>
+            <div className="bg-blue-50/30 p-4 rounded-lg">
+              <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Payment Terms:</h4>
+              <p className="text-gray-700 text-sm sm:text-base leading-relaxed">{formData.paymentTerms}</p>
             </div>
           )}
           {formData.notes && (
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-1">Notes:</h4>
-              <p className="text-gray-600 whitespace-pre-line">{formData.notes}</p>
+            <div className="bg-yellow-50/30 p-4 rounded-lg">
+              <h4 className="font-semibold text-gray-900 mb-2 text-sm sm:text-base">Notes:</h4>
+              <p className="text-gray-700 text-sm sm:text-base whitespace-pre-line leading-relaxed">{formData.notes}</p>
             </div>
           )}
         </div>
@@ -378,13 +397,13 @@ const handleGeneratePDF = async () => {
   }, []);
 
   return (
-<div className="min-h-screen bg-background py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 py-6 sm:py-8 lg:py-12">
+      <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
         <InvoiceHeader />
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-5 gap-6 lg:gap-8 xl:gap-12">
           {/* Form Section */}
-          <div className="space-y-6">
+          <div className="xl:col-span-3 space-y-6 lg:space-y-8">
             <InvoiceDetailsForm 
               formData={formData} 
               updateField={updateField} 
@@ -416,31 +435,33 @@ const handleGeneratePDF = async () => {
               formatCurrency={formatCurrency}
             />
             
-            <div className="flex justify-center pt-6">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4 pt-8 pb-6">
               <Button
                 onClick={handleGeneratePDF}
                 loading={isGenerating}
-                size="lg"
-                className="px-8"
+                size="xl"
+                className="w-full sm:w-auto px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
               >
-                <ApperIcon name="Download" className="w-5 h-5 mr-2" />
+                <ApperIcon name="Download" className="w-6 h-6 mr-3" />
                 {isGenerating ? "Generating PDF..." : "Generate & Download PDF"}
               </Button>
             </div>
           </div>
 
           {/* Live Preview Section */}
-          <div className="lg:sticky lg:top-8 lg:h-fit">
-            <div className="mb-4">
-              <h2 className="text-lg font-semibold text-gray-900 flex items-center">
-                <ApperIcon name="Eye" className="w-5 h-5 mr-2" />
+          <div className="xl:col-span-2 xl:sticky xl:top-6 xl:h-screen xl:overflow-y-auto xl:pb-6">
+            <div className="mb-6 bg-white/70 backdrop-blur-sm p-4 sm:p-6 rounded-xl border border-white/20 shadow-lg">
+              <h2 className="text-xl font-bold text-gray-900 flex items-center mb-2">
+                <ApperIcon name="Eye" className="w-6 h-6 mr-3 text-primary" />
                 Live Preview
               </h2>
-              <p className="text-sm text-gray-600 mt-1">
-                This preview shows how your invoice will appear in the PDF
+              <p className="text-sm text-gray-600 leading-relaxed">
+                This preview shows how your invoice will appear in the PDF. Changes are reflected instantly.
               </p>
             </div>
-            <InvoicePreview />
+            <div className="transform transition-all duration-300 hover:scale-[1.02]">
+              <InvoicePreview />
+            </div>
           </div>
         </div>
       </div>
