@@ -43,10 +43,10 @@ let yPos = 20;
   doc.text("INVOICE", 150, 30);
   
   // Business info
-  doc.setFontSize(10);
+doc.setFontSize(10);
   doc.setTextColor(100, 116, 139); // Secondary gray
   const businessAddress = (invoiceData.businessAddress || "").split("\n");
-  let yPos = 40;
+  yPos = 40;
   businessAddress.forEach((line) => {
     doc.text(line, 20, yPos);
     yPos += 5;
